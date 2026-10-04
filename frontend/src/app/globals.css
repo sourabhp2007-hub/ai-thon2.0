@@ -1,0 +1,251 @@
+@import "tailwindcss";
+@import "@xyflow/react/dist/style.css" layer(base);
+
+/* Design tokens. Dark, Framer-style: black canvas, near-black cards, hairline borders,
+   white primary actions, blue accent. A light set is restored for print below. */
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-inter-tight), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-source-serif), ui-serif, Georgia, serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  --color-navy-950: #000000;
+  --color-navy-900: #0a0a0a;
+  --color-navy-800: #171717;
+  --color-navy-700: #262626;
+  --color-ink: #ffffff;
+  --color-muted: #a1a1a1;
+  --color-subtle: #6e6e6e;
+  --color-canvas: #000000;
+  --color-surface: #0f0f0f;
+  --color-raised: #161616;
+  --color-border: #1f1f1f;
+  --color-border-strong: #2e2e2e;
+
+  --color-primary: #2f8fff;
+  --color-primary-hover: #1a7df0;
+  --color-primary-soft: #0b1f38;
+  --color-accent: #9b7bff;
+  --color-accent-soft: #1b1530;
+
+  --color-supported: #4ade80;
+  --color-supported-bg: #0b2416;
+  --color-partial: #fbbf24;
+  --color-partial-bg: #2a1f08;
+  --color-unsupported: #f87171;
+  --color-unsupported-bg: #2c1010;
+  --color-unverified: #a1a1a1;
+  --color-unverified-bg: #1a1a1a;
+
+  --color-highlight: #3a3000;
+  --color-highlight-text: #ffe58a;
+  --color-highlight-row: #110f05;
+
+  --text-display: 3rem;
+  --text-display--line-height: 1.15;
+  --text-label: 0.75rem;
+  --text-label--line-height: 1rem;
+
+  --radius-control: 8px;
+  --radius-card: 16px;
+  --radius-sheet: 24px;
+
+  --animate-pulse-dot: pulse-dot 1.4s ease-in-out infinite;
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.45; transform: scale(0.82); }
+  }
+}
+
+:root {
+  color-scheme: dark;
+}
+
+@keyframes grow {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes sheet-up {
+  from { transform: translateY(24px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+@keyframes sheet-left {
+  from { transform: translateX(32px); opacity: 0; }
+  to { transform: none; opacity: 1; }
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "cv11", "ss01";
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-primary) 22%, transparent);
+}
+
+/* Visible keyboard focus on every interactive element. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@layer components {
+  /* Display headings: tight, heavy-ish, negative tracking. */
+  .display {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1.06;
+  }
+
+  /* Hairline card with a faint inner top light, as on large product panels. */
+  .panel {
+    border-radius: var(--radius-sheet);
+    border: 1px solid rgb(255 255 255 / 0.08);
+    background: linear-gradient(180deg, rgb(255 255 255 / 0.035), rgb(255 255 255 / 0.01) 40%, transparent);
+  }
+
+  /* Blue glow behind the hero product shot. */
+  .glow {
+    background:
+      radial-gradient(32% 38% at 50% 58%, rgb(47 100 255 / 0.75), transparent 70%),
+      radial-gradient(60% 65% at 50% 60%, rgb(40 60 255 / 0.28), transparent 75%);
+    filter: blur(8px);
+  }
+  .glow-ring {
+    box-shadow:
+      0 0 0 1px rgb(120 160 255 / 0.55),
+      0 0 24px 2px rgb(60 110 255 / 0.55),
+      inset 0 0 18px rgb(80 130 255 / 0.25);
+  }
+
+  /* Uppercase tracked label: section and chain-step labels. */
+  .eyebrow {
+    font-size: var(--text-label);
+    line-height: var(--text-label--line-height);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--color-muted);
+  }
+
+  /* Source text is always serif; system text is always sans. */
+  .source-text {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--color-ink);
+  }
+
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Evidence graph: keep React Flow chrome consistent with the design tokens. */
+.react-flow__edge-textbg {
+  fill: var(--color-surface);
+}
+.react-flow__controls {
+  box-shadow: none;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.react-flow__controls-button {
+  background: var(--color-surface);
+  color: var(--color-ink);
+  fill: var(--color-ink);
+  border-bottom-color: var(--color-border);
+}
+.react-flow__controls-button:hover {
+  background: var(--color-raised);
+}
+.react-flow__minimap {
+  background: var(--color-surface);
+}
+.react-flow__attribution {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Light document surface: the print view on screen and on paper. */
+.theme-light {
+  color-scheme: light;
+  --color-ink: #101828;
+  --color-muted: #5b6474;
+  --color-subtle: #8a93a3;
+  --color-canvas: #ffffff;
+  --color-surface: #ffffff;
+  --color-raised: #f7f8fa;
+  --color-border: #e4e7ec;
+  --color-border-strong: #cfd4dc;
+  --color-primary: #3f51d7;
+  --color-primary-soft: #eef0fd;
+  --color-accent: #7a5af8;
+  --color-accent-soft: #f3f0ff;
+  --color-supported: #067647;
+  --color-supported-bg: #ecfdf3;
+  --color-partial: #b54708;
+  --color-partial-bg: #fffaeb;
+  --color-unsupported: #b42318;
+  --color-unsupported-bg: #fef3f2;
+  --color-unverified: #475467;
+  --color-unverified-bg: #f2f4f7;
+  --color-highlight: #fff4c2;
+  --color-highlight-text: #101828;
+  --color-highlight-row: #fffdf2;
+}
+
+@media print {
+  :root {
+    color-scheme: light;
+    --color-ink: #101828;
+    --color-muted: #5b6474;
+    --color-subtle: #8a93a3;
+    --color-canvas: #ffffff;
+    --color-surface: #ffffff;
+    --color-raised: #f7f8fa;
+    --color-border: #e4e7ec;
+    --color-border-strong: #cfd4dc;
+    --color-primary: #3f51d7;
+    --color-primary-soft: #eef0fd;
+    --color-accent: #7a5af8;
+    --color-accent-soft: #f3f0ff;
+    --color-supported: #067647;
+    --color-supported-bg: #ecfdf3;
+    --color-partial: #b54708;
+    --color-partial-bg: #fffaeb;
+    --color-unsupported: #b42318;
+    --color-unsupported-bg: #fef3f2;
+    --color-unverified: #475467;
+    --color-unverified-bg: #f2f4f7;
+    --color-highlight: #fff4c2;
+    --color-highlight-text: #101828;
+    --color-highlight-row: #fffdf2;
+  }
+  body {
+    background: #fff;
+  }
+  .no-print {
+    display: none !important;
+  }
+}
